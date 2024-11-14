@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Centered Content</title>
+	<style type="text/css">
+		/* Reset some default browser styles */
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+		}
+
+		body {
+			/*font-family: Arial, sans-serif;*/
+			background-color: #f0f0f0;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			min-height: 100vh;
+			margin: 0;
+			text-align: center;
+		}
+
+		header {
+			background-color: #ffffff;
+			padding: 20px;
+			width: 100%;
+			max-width: 90%;
+			text-align: center;
+			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+		}
+
+		h1 {
+			color: #333333;
+			font-size: 24px;
+		}
+
+		main {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			width: 100%;
+			max-width: 90%;
+			flex-grow: 1;
+		}
+
+		.content-row {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			padding: 20px;
+			background-color: #ffffff;
+			margin: 1% 0; /* 5% of the viewport height as margin */
+			border-radius: 5px;
+			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+			height: 10%; /* 10% of the viewport height */
+			flex-wrap: wrap;
+		}
+
+			.content-row img {
+				width: 100px;
+				height: 80%; /* 80% of the content-row height */
+				object-fit: cover;
+			}
+
+		.item {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			padding: 20px;
+			background-color: #ffffff;
+			margin: 10px;
+			border-radius: 5px;
+			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+			height: 10%;
+			flex-direction: column;
+		}
+
+			.item img {
+				width: 100px;
+				height: 80%; /* 80% of the item height */
+				object-fit: cover;
+			}
+
+		.label {
+			font-size: 18px;
+			color: #333333;
+			margin: 0 10px;
+		}
+
+		.link {
+			font-size: 16px;
+			color: #007bff;
+			text-decoration: none;
+			transition: color 0.3s ease-in-out;
+		}
+
+			.link:hover {
+				color: #0056b3;
+			}
+		#toggleOptions1 {
+			background-color: #007bff;
+			border: none;
+			color: white;
+			padding: 7px 21px;
+			text-align: center;
+			text-decoration: none;
+			display: inline-block;
+			font-size: 16px;
+			/* margin: -63px 95%-5px; */
+			cursor: pointer;
+			transition: background-color 0.3s;
+			border-radius: 4px;
+		}
+
+			#toggleOptions1:hover {
+				background-color: #0056b3; /* 鼠标悬停时背景颜色变化 */
+			}
+
+		#toggleOptions3 {
+			background-color: #007bff;
+			border: none;
+			color: white;
+			padding: 7px 21px;
+			text-align: center;
+			text-decoration: none;
+			display: inline-block;
+			font-size: 16px;
+			/* margin: -63px 95%-5px; */
+			cursor: pointer;
+			transition: background-color 0.3s;
+			border-radius: 4px;
+		}
+
+			#toggleOptions3:hover {
+				background-color: #0056b3; /* 鼠标悬停时背景颜色变化 */
+			}
+
+		#toggleOptions2 {
+			background-color: #007bff;
+			border: none;
+			color: white;
+			padding: 7px 21px;
+			text-align: center;
+			text-decoration: none;
+			display: inline-block;
+			font-size: 16px;
+			/* margin: -63px 95%-5px; */
+			cursor: pointer;
+			transition: background-color 0.3s;
+			border-radius: 4px;
+		}
+
+			#toggleOptions2:hover {
+				background-color: #0056b3; /* 鼠标悬停时背景颜色变化 */
+			}
+
+		.filters {
+			display: flex;
+		}
+
+		.filter-section {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			width: 100%;
+			background-color: #ffffff;
+			padding: 10px 0;
+			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+			position: sticky;
+			top: 0;
+			z-index: 100;
+		}
+
+		.filter-button {
+			padding: 8px 12px;
+			margin: 0 5px;
+			border: none;
+			border-radius: 4px;
+			cursor: pointer;
+			background-color: #f0f0f0;
+			color: #333333;
+			font-size: 14px;
+			transition: background-color 0.3s ease-in-out;
+		}
+
+			.filter-button.active {
+				background-color: #007bff;
+				color: #ffffff;
+			}
+	</style>
+	<script defer>
+		document.addEventListener('DOMContentLoaded', function () {
+			const filterButtons = document.querySelectorAll('.filter-button');
+			const items = document.querySelectorAll('.item');
+
+			function filterItems(category) {
+				items.forEach(item => {
+					if (category === 'all' || item.classList.contains(category)) {
+						item.style.display = 'flex';
+					} else {
+						item.style.display = 'none';
+					}
+				});
+			}
+
+			filterButtons.forEach(button => {
+				button.addEventListener('click', function (e) {
+					// Remove active class from all buttons
+					filterButtons.forEach(btn => btn.classList.remove('active'));
+					// Add active class to clicked button
+					e.target.classList.add('active');
+
+					// Get the data-filter attribute value
+					const category = e.target.dataset.filter;
+					// Filter items based on the selected category
+					filterItems(category);
+				});
+			});
+
+			// Initialize with "All" filter active
+			filterButtons[0].classList.add('active');
+			filterItems('all');
+		});
+		document.addEventListener('DOMContentLoaded', function () {
+			const goToPageTwoButton = document.getElementById('toggleOptions3');
+
+			goToPageTwoButton.addEventListener('click', function () {
+				window.location.href = 'sousuo.html';
+			});
+		});
+		document.addEventListener('DOMContentLoaded', function () {
+			const goToPageTwoButton = document.getElementById('toggleOptions2');
+
+			goToPageTwoButton.addEventListener('click', function () {
+				window.location.href = 'success.html';
+			});
+		});
+		document.addEventListener('DOMContentLoaded', function () {
+			const goToPageTwoButton = document.getElementById('toggleOptions1');
+
+			goToPageTwoButton.addEventListener('click', function () {
+				window.location.href = 'web_all_gj.html';
+			});
+		});
+	</script>
+</head>
+<body>
+	<header>
+		<h1> 部分网站主页链接</h1>
+		<button id="toggleOptions1">工具类网站</button>
+		<button id="toggleOptions3">再次搜索</button>
+		<button id="toggleOptions2">返回</button>
+	</header>
+	<main>
+		<aside class="filter-section">
+			<div class="filters">
+				<button class="filter-button" data-filter="all">所有的</button>
+				<button class="filter-button" data-filter="category1">搜索类</button>
+				<button class="filter-button" data-filter="category2">图片类</button>
+				<button class="filter-button" data-filter="category3">新闻类</button>
+				<button class="filter-button" data-filter="category4">社交类</button>
+				<button class="filter-button" data-filter="category5">影音类</button>
+				<button class="filter-button" data-filter="category6">百科类</button>
+				<button class="filter-button" data-filter="category7">生活类</button>
+				<button class="filter-button" data-filter="category8">其他类</button>
+			</div>
+		</aside>
+		<section class="content-row">
+			<a href="http://www.baidu.com/" target="_blank">
+				<div class="item category1">
+					<img src="http://localhost:5000/static/image/baidu_ss.png" alt="Image 1">
+					<span class="label">百度搜索</span>
+				</div>
+			</a>
+			<a href="http://weibo.com/" target="_blank">
+				<div class="item category4">
+					<img src="http://localhost:5000/static/image/weibo.png" alt="Image 2">
+					<span class="label">微博</span>
+				</div>
+			</a>
+			<a href="http://www.so.com/" target="_blank">
+				<div class="item category1">
+					<img src="http://localhost:5000/static/image/360ss.svg" alt="Image 3">
+					<span class="label">360搜索</span>
+				</div>
+			</a>
+			<a href="http://www.bilibili.com/" target="_blank">
+				<div class="item category5">
+					<img src="http://localhost:5000/static/image/bilibili.png" alt="Image 3">
+					<span class="label">哔哩哔哩</span>
+				</div>
+			</a>
+			<a href="https://v.qq.com/" target="_blank">
+				<div class="item category5">
+					<img src="http://localhost:5000/static/image/tx_sp.png" alt="Image 3">
+					<span class="label">腾讯视频</span>
+				</div>
+			</a>
+			<a href="https://y.qq.com/" target="_blank">
+				<div class="item category5">
+					<img src="http://localhost:5000/static/image/qq_music.png" alt="Image 3">
+					<span class="label">QQ音乐</span>
+				</div>
+			</a>
+			<a href="https://music.163.com/" target="_blank">
+				<div class="item category5">
+					<img src="http://localhost:5000/static/image/wyy_music.png" alt="Image 3">
+					<span class="label">网易云音乐</span>
+				</div>
+			</a>
+			<a href="http://baike.so.com/" target="_blank">
+				<div class="item category6">
+					<img src="http://localhost:5000/static/image/360bk.svg" alt="Image 3">
+					<span class="label">360百科</span>
+				</div>
+			</a>
+			<a href="http://www.douyin.com/" target="_blank">
+				<div class="item category5">
+					<img src="http://localhost:5000/static/image/douyin.png" alt="Image 3">
+					<span class="label">抖音</span>
+				</div>
+			</a>
+			<a href="http://www.zhihu.com/" target="_blank">
+				<div class="item category4">
+					<img src="http://localhost:5000/static/image/zhihu.png" alt="Image 3">
+					<span class="label">知乎</span>
+				</div>
+			</a>
+			<a href="https://m.sm.cn/" target="_blank">
+				<div class="item category1">
+					<img src="http://localhost:5000/static/image/shenma.png" alt="Image 3">
+					<span class="label">神马搜索</span>
+				</div>
+			</a>
+			<a href="https://youku.com/" target="_blank">
+				<div class="item category5">
+					<img src="http://localhost:5000/static/image/youku.png" alt="Image 3">
+					<span class="label">优酷视频</span>
+				</div>
+			</a>
+			<a href="https://www.mgtv.com/" target="_blank">
+				<div class="item category5">
+					<img src="http://localhost:5000/static/image/mg_tv.png" alt="Image 3">
+					<span class="label">芒果TV</span>
+				</div>
+			</a>
+			<a href="https://news.163.com/" target="_blank">
+				<div class="item category3">
+					<img src="http://localhost:5000/static/image/wy_xw.png" alt="Image 3">
+					<span class="label">网易新闻</span>
+				</div>
+			</a>
+			<a href="http://www.sogou.com/" target="_blank">
+				<div class="item category1">
+					<img src="http://localhost:5000/static/image/sougou_ss.png" alt="Image 3">
+					<span class="label">搜狗搜索</span>
+				</div>
+			</a>
+			<a href="http://baike.baidu.com/" target="_blank">
+				<div class="item category6">
+					<img src="http://localhost:5000/static/image/baidu_bk.svg" alt="Image 3">
+					<span class="label">百度百科</span>
+				</div>
+			</a>
+			<a href="http://tieba.baidu.com/" target="_blank">
+				<div class="item category4">
+					<img src="http://localhost:5000/static/image/baidu_tb.png" alt="Image 3">
+					<span class="label">百度贴吧</span>
+				</div>
+			</a>
+			<a href="http://www.iqiyi.com/" target="_blank">
+				<div class="item category5">
+					<img src="http://localhost:5000/static/image/aiqiyi.svg" alt="Image 3">
+					<span class="label">爱奇艺</span>
+				</div>
+			</a>
+			<a href="https://news.sina.com.cn/" target="_blank">
+				<div class="item category3">
+					<img src="http://localhost:5000/static/image/xl_xw.png" alt="Image 3">
+					<span class="label">新浪新闻</span>
+				</div>
+			</a>
+			<a href="https://www.jd.com/" target="_blank">
+				<div class="item category7">
+					<img src="http://localhost:5000/static/image/jingdong.png" alt="Image 3">
+					<span class="label">京东</span>
+				</div>
+			</a>
+			<a href="https://www.taobao.com/" target="_blank">
+				<div class="item category7">
+					<img src="http://localhost:5000/static/image/taobao.png" alt="Image 3">
+					<span class="label">淘宝</span>
+				</div>
+			</a>
+			<a href="http://www.bing.com/" target="_blank">
+				<div class="item category1">
+					<img src="http://localhost:5000/static/image/bing.png" alt="Image 3">
+					<span class="label">bing搜索</span>
+				</div>
+			</a>
+			<a href="http://image.baidu.com/" target="_blank">
+				<div class="item category2">
+					<img src="http://localhost:5000/static/image/baidu_tp.webp" alt="Image 3">
+					<span class="label">百度图片</span>
+				</div>
+			</a>
+			<a href="http://pic.sogou.com//" target="_blank">
+				<div class="item category2">
+					<img src="http://localhost:5000/static/image/sougou_tp.png" alt="Image 3">
+					<span class="label">搜狗图片</span>
+				</div>
+			</a>
+			<a href="http://image.so.com/" target="_blank">
+				<div class="item category2">
+					<img src="http://localhost:5000/static/image/360tp.png" alt="Image 3">
+					<span class="label">360图片</span>
+				</div>
+			</a>
+			<a href="http://www.douban.com/" target="_blank">
+				<div class="item category4">
+					<img src="http://localhost:5000/static/image/douban.png" alt="Image 3">
+					<span class="label">豆瓣</span>
+				</div>
+			</a>
+			<a href="http://www.baike.com/" target="_blank">
+				<div class="item category6">
+					<img src="http://localhost:5000/static/image/dy_bk.png" alt="Image 3">
+					<span class="label">抖音百科</span>
+				</div>
+			</a>
+			<a href="https://ent.163.com/photo#Index" target="_blank">
+				<div class="item category2">
+					<img src="http://localhost:5000/static/image/wy_tp.png" alt="Image 3">
+					<span class="label">网易图片</span>
+				</div>
+			</a>
+			<a href="http://baike.sogou.com/" target="_blank">
+				<div class="item category6">
+					<img src="http://localhost:5000/static/image/sougou_bk.svg" alt="Image 3">
+					<span class="label">搜狗百科</span>
+				</div>
+			</a>
+			<a href="http://haokan.baidu.com/" target="_blank">
+				<div class="item category3">
+					<img src="http://localhost:5000/static/image/xl_yl.png" alt="Image 3">
+					<span class="label">新浪娱乐</span>
+				</div>
+			</a>
+			<a href="https://finance.sina.com.cn/" target="_blank">
+				<div class="item category8">
+					<img src="http://localhost:5000/static/image/xl_yl.png" alt="Image 3">
+					<span class="label">新浪财经</span>
+				</div>
+			</a>
+			<a href="https://photo.sina.com.cn/" target="_blank">
+				<div class="item category2">
+					<img src="http://localhost:5000/static/image/xl_tp.png" alt="Image 3">
+					<span class="label">新浪图片</span>
+				</div>
+			</a>
+			<a href="http://haokan.baidu.com/" target="_blank">
+				<div class="item category5">
+					<img src="http://localhost:5000/static/image/haokan_sp.png" alt="Image 3">
+					<span class="label">好看视频</span>
+				</div>
+			</a>
+			<a href="http://sports.sina.com.cn/" target="_blank">
+				<div class="item category8">
+					<img src="http://localhost:5000/static/image/xl_ty.png" alt="Image 3">
+					<span class="label">新浪体育</span>
+				</div>
+			</a>
+			<a href="https://www.1688.com/" target="_blank">
+				<div class="item category7">
+					<img src="http://localhost:5000/static/image/1688.png" alt="Image 3">
+					<span class="label">1688</span>
+				</div>
+			</a>
+			<a href="http://news.baidu.com/" target="_blank">
+				<div class="item category3">
+					<img src="http://localhost:5000/static/image/baidu_xw.png" alt="Image 3">
+					<span class="label">百度新闻</span>
+				</div>
+			</a>
+			<a href="https://www.360kuai.com/" target="_blank">
+				<div class="item category3">
+					<img src="http://localhost:5000/static/image/360_xw.png" alt="Image 3">
+					<span class="label">360新闻(快资讯)</span>
+				</div>
+			</a>
+			<a href="http://weixin.sogou.com/" target="_blank">
+				<div class="item category3">
+					<img src="http://localhost:5000/static/image/sougou_wx.png" alt="Image 3">
+					<span class="label">微信搜索(搜狗)</span>
+				</div>
+			</a>
+			<a href="http://zhihu.sogou.com/" target="_blank">
+				<div class="item category3">
+					<img src="http://localhost:5000/static/image/sougou_zh.png" alt="Image 3">
+					<span class="label">知乎(搜狗)</span>
+				</div>
+			</a>
+		</section>
+	</main>
+</body>
+</html>
