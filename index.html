@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Centered Content</title>
+	<style type="text/css">
+		/* Reset some default browser styles */
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+		}
+
+		body {
+			/*font-family: Arial, sans-serif;*/
+			background-color: #f0f0f0;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			min-height: 100vh;
+			margin: 0;
+			text-align: center;
+		}
+
+		header {
+			background-color: #ffffff;
+			padding: 20px;
+			width: 100%;
+			max-width: 90%;
+			text-align: center;
+			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+		}
+
+		h1 {
+			color: #333333;
+			font-size: 24px;
+		}
+
+		main {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			width: 100%;
+			max-width: 90%;
+			flex-grow: 1;
+		}
+
+		.content-row {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			padding: 20px;
+			background-color: #ffffff;
+			margin: 1% 0; /* 5% of the viewport height as margin */
+			border-radius: 5px;
+			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+			height: 10%; /* 10% of the viewport height */
+			flex-direction: column;
+		}
+
+			.content-row img {
+				width: 100px;
+				height: 80%; /* 80% of the content-row height */
+				object-fit: cover;
+			}
+
+		.item {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			padding: 20px;
+			background-color: #ffffff;
+			margin: 10px;
+			border-radius: 5px;
+			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+			height: 10%;
+			flex-direction: column;
+		}
+
+			.item img {
+				width: 100px;
+				height: 80%; /* 80% of the item height */
+				object-fit: cover;
+			}
+
+		.label {
+			font-size: 18px;
+			color: #333333;
+			margin: 0 10px;
+		}
+
+		.link {
+			font-size: 16px;
+			color: #007bff;
+			text-decoration: none;
+			transition: color 0.3s ease-in-out;
+		}
+
+			.link:hover {
+				color: #0056b3;
+			}
+
+		.label_ {
+			font-size: 16px;
+			color: #333333;
+			margin: 0 10px;
+		}
+
+		#toggleOptions3 {
+			background-color: #007bff;
+			border: none;
+			color: white;
+			padding: 7px 21px;
+			text-align: center;
+			text-decoration: none;
+			display: inline-block;
+			font-size: 16px;
+			/* margin: -63px 95%-5px; */
+			cursor: pointer;
+			transition: background-color 0.3s;
+			border-radius: 4px;
+		}
+
+			#toggleOptions3:hover {
+				background-color: #0056b3; /* 鼠标悬停时背景颜色变化 */
+			}
+
+		#toggleOptions1 {
+			background-color: #007bff;
+			border: none;
+			color: white;
+			padding: 7px 21px;
+			text-align: center;
+			text-decoration: none;
+			display: inline-block;
+			font-size: 16px;
+			/* margin: -63px 95%-5px; */
+			cursor: pointer;
+			transition: background-color 0.3s;
+			border-radius: 4px;
+		}
+
+			#toggleOptions1:hover {
+				background-color: #0056b3; /* 鼠标悬停时背景颜色变化 */
+			}
+
+		#toggleOptions2 {
+			background-color: #007bff;
+			border: none;
+			color: white;
+			padding: 7px 21px;
+			text-align: center;
+			text-decoration: none;
+			display: inline-block;
+			font-size: 16px;
+			/* margin: -63px 95%-5px; */
+			cursor: pointer;
+			transition: background-color 0.3s;
+			border-radius: 4px;
+		}
+
+			#toggleOptions2:hover {
+				background-color: #0056b3; /* 鼠标悬停时背景颜色变化 */
+			}
+
+		.filters {
+			display: flex;
+		}
+
+		.filter-section {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			width: 100%;
+			background-color: #ffffff;
+			padding: 10px 0;
+			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+			position: sticky;
+			top: 0;
+			z-index: 100;
+		}
+
+		.filter-button {
+			padding: 8px 12px;
+			margin: 0 5px;
+			border: none;
+			border-radius: 4px;
+			cursor: pointer;
+			background-color: #f0f0f0;
+			color: #333333;
+			font-size: 14px;
+			transition: background-color 0.3s ease-in-out;
+		}
+
+			.filter-button.active {
+				background-color: #007bff;
+				color: #ffffff;
+			}
+	</style>
+	<script defer>
+		document.addEventListener('DOMContentLoaded', function () {
+			const filterButtons = document.querySelectorAll('.filter-button');
+			const items = document.querySelectorAll('.item');
+
+			function filterItems(category) {
+				items.forEach(item => {
+					if (category === 'all' || item.classList.contains(category)) {
+						item.style.display = 'flex';
+					} else {
+						item.style.display = 'none';
+					}
+				});
+			}
+
+			filterButtons.forEach(button => {
+				button.addEventListener('click', function (e) {
+					// Remove active class from all buttons
+					filterButtons.forEach(btn => btn.classList.remove('active'));
+					// Add active class to clicked button
+					e.target.classList.add('active');
+
+					// Get the data-filter attribute value
+					const category = e.target.dataset.filter;
+					// Filter items based on the selected category
+					filterItems(category);
+				});
+			});
+
+			// Initialize with "All" filter active
+			filterButtons[0].classList.add('active');
+			filterItems('all');
+		});
+		document.addEventListener('DOMContentLoaded', function () {
+			const goToPageTwoButton = document.getElementById('toggleOptions3');
+
+			goToPageTwoButton.addEventListener('click', function () {
+				window.location.href = 'sousuo.html';
+			});
+		});
+		document.addEventListener('DOMContentLoaded', function () {
+			const goToPageTwoButton = document.getElementById('toggleOptions2');
+
+			goToPageTwoButton.addEventListener('click', function () {
+				window.location.href = 'success.html';
+			});
+		});
+		document.addEventListener('DOMContentLoaded', function () {
+			const goToPageTwoButton = document.getElementById('toggleOptions1');
+
+			goToPageTwoButton.addEventListener('click', function () {
+				window.location.href = 'web_All.html';
+			});
+		});
+	</script>
+</head>
+<body>
+	<header>
+		<h1> 部分AI网站(国内可用)</h1>
+	</header>
+	<main>
+		<aside class="filter-section">
+			<div class="filters">
+				<button class="filter-button" data-filter="all">所有的</button>
+			</div>
+		</aside>
+		<section class="content-row">
+			<a href="https://yiyan.baidu.com/" target="_blank">
+				<div class="item category1">
+					<img src="wxyy.png" alt="Image 1">
+					<span class="label">文心一言</span>
+					<span class="label_">https://yiyan.baidu.com/</span>
+				</div>
+			</a>
+			<a href="https://tongyi.aliyun.com/qianwen/" target="_blank">
+				<div class="item category2">
+					<img src="ty.png" alt="Image 1">
+					<span class="label">通义千问</span>
+					<span class="label_">https://tongyi.aliyun.com/qianwen/</span>
+				</div>
+			</a>
+			<a href="https://www.doubao.com/chat/" target="_blank">
+				<div class="item category3">
+					<img src="db.png" alt="Image 1">
+					<span class="label">豆包</span>
+					<span class="label_">https://www.doubao.com/chat/</span>
+				</div>
+			</a>
+			<a href="https://yuanbao.tencent.com/chat" target="_blank">
+				<div class="item category4">
+					<img src="yb.png" alt="Image 1">
+					<span class="label">腾讯元宝</span>
+					<span class="label_">https://yuanbao.tencent.com/chat</span>
+				</div>
+			</a>
+			<a href="https://kimi.moonshot.cn/" target="_blank">
+				<div class="item category4">
+					<img src="kimi.png" alt="Image 1">
+					<span class="label">kimi</span>
+					<span class="label_">https://kimi.moonshot.cn/</span>
+				</div>
+			</a>
+			<a href="https://chatglm.cn/?lang=zh" target="_blank">
+				<div class="item category2">
+					<img src="zpqy.png" alt="Image 1">
+					<span class="label">智谱清言</span>
+					<span class="label_">https://chatglm.cn/?lang=zh</span>
+				</div>
+			</a>
+			<a href="https://xinghuo.xfyun.cn/" target="_blank">
+				<div class="item category2">
+					<img src="xfxh.svg" alt="Image 1">
+					<span class="label">讯飞星火</span>
+					<span class="label_">hhttps://xinghuo.xfyun.cn/</span>
+				</div>
+			</a>
+			<a href="https://cueme.cn/" target="_blank">
+				<div class="item category2">
+					<img src="cm.png" alt="Image 1">
+					<span class="label">CueMe</span>
+					<span class="label_">https://cueme.cn/</span>
+				</div>
+			</a>
+			<a href="https://hailuoai.com/" target="_blank">
+				<div class="item category2">
+					<img src="hl.png" alt="Image 1">
+					<span class="label">海螺</span>
+					<span class="label_">https://hailuoai.com/</span>
+				</div>
+			</a>
+			<a href="https://taichu-web.ia.ac.cn/#/" target="_blank">
+				<div class="item category2">
+					<img src="zqtc.png" alt="Image 1">
+					<span class="label">紫气太初</span>
+					<span class="label_">https://taichu-web.ia.ac.cn/#/</span>
+				</div>
+			</a>
+		</section>
+	</main>
+</body>
+</html>
